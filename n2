@@ -1,0 +1,90 @@
+#include <iostream>
+#include <sstream>
+
+using namespace std;
+
+bool create(double * & A, int resultsize) {
+    bool result = true;
+    string stroka;
+    getline(cin, stroka);
+    istringstream stream(stroka);
+    int razmer = 0;
+    int b;
+    A= new double[resultsize];
+    int i = 0;
+    while (stream >> b) {
+        if (razmer < resultsize) {
+            A[i] = b;
+            i++;
+            razmer++;
+        }
+        else {
+            result = false;
+            break;
+        }
+    }
+    if (resultsize > razmer) {
+        result = false;
+    }
+    return result;}
+
+bool read(int & razmer) {
+    string stroka;
+    getline(cin, stroka);
+    istringstream stream(stroka);
+    bool result = true;
+    if (stream >> razmer && razmer > 0) {}
+    else {
+        result = false;
+    }
+    return result;
+}
+
+void sort(double * A, int razmer, int k) {
+    for (int i = 0; i < (razmer - k) / 2; i++) {
+        swap(A[i], A[razmer - k - 1 - i]);
+    }
+    for (int i = razmer - k, j = 0; i < razmer -  (k / 2); i++, j++) {
+        swap(A[i], A[razmer - 1 - j]);
+    }
+    for (int i = 0; i < razmer / 2; i++) {
+        swap(A[i], A[razmer - 1 - i]);
+    }
+}
+
+void write(double *A, int razmer) {
+    for (int i = 0; i < razmer; i++) {
+        cout << A[i];
+        if (i != razmer - 1) {
+            cout << ' ';
+        }
+        else {
+            cout << '\n';
+        }
+    }
+}
+
+int main()
+{
+    int razmer = 0;
+    double * A = 0;
+    if (read(razmer)) {
+        if (create(A, razmer)) {
+            int k = 0;
+            if (read(k)) {
+                sort(A, razmer, k);
+                write(A, razmer);
+            }
+            else {
+                cout << "An error has occured while reading input data.";
+            }
+        }
+        else {
+            cout << "An error has occured while reading input data.";
+        }
+    }
+    else {
+        cout << "An error has occured while reading input data.";
+    }
+    return 0;
+}
