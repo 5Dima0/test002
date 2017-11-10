@@ -1,0 +1,143 @@
+#include <iostream>
+#include <cstdlib>
+#include <utility>
+#include <sstream>
+
+using namespace std;
+
+bool create(int ** & A, int & Stroka, int & Stolb) {
+	bool result = true;
+    A = new int *[Stroka];
+	for (int i = 0; i < Stroka; i++) {
+		A[i] = new int[Stolb];
+		string stroka1;
+		getline(cin, stroka1);
+		istringstream stream(stroka1);
+				for (int j = 0; j < Stolb; j++) {
+			if (!(stream >> A[i][j])) {
+				result = false;
+			}
+		}
+	}
+	return result;
+}
+
+bool read(int & Stroka, int & Stolb) {
+	bool result = false;
+	string stroka1;
+	getline(cin, stroka1);
+	istringstream stream(stroka1);
+	char s;
+	if (stream >> Stroka && Stroka > 0 &&
+		stream >> s && s == ',' &&
+		stream >> Stolb && Stolb > 0) {
+		result = true;
+	}
+	return result;
+}
+
+bool shift(int & sdvig) {
+	bool result = false;
+	string stroka1;
+	getline(cin, stroka1);
+	istringstream stream(stroka1);
+		if (stream >> sdvig && sdvig > -1) {
+		result = true;
+	}
+	return result;
+}
+
+void write(int ** A, int Stroka, int Stolb) {
+	cout << '\n';
+	for (int i = 0; i < Stroka; i++) {
+		for (int j = 0; j < Stolb; j++) {
+			cout << A[i][j];
+			if (j != Stolb - 1) {
+				cout << ' ';
+			}
+			else {
+				cout << '\n';
+			}
+		}
+	}
+}
+
+void sort(int * mass, int razmer, int sdvig) {
+	for (int i = 0; i < (razmer - sdvig) / 2; i++) {
+		swap(mass[i], mass[razmer - sdvig - 1 - i]);
+	}
+	for (int i = razmer - sdvig, j = 0; i < razmer - (sdvig / 2); i++, j++) {
+		swap(mass[i], mass[razmer - 1 - j]);
+	}
+	for (int i = 0; i < razmer / 2; i++) {
+		swap(mass[i], mass[razmer - 1 - i]);
+	}
+}
+
+void obmen(int ** A, int Stroka, int Stolb, int sdvig) {
+	int *mass = new int[2 * (Stroka + Stolb) - 4];
+	int k = 0;
+		for (int j = 0, i = 0; j < Stolb; j++) {
+		mass[k] = A[i][j];
+		k++;
+	}
+	for (int i = 1, j = Stolb - 1; i < Stroka - 1; i++) {
+		mass[k] = A[i][j];
+		k++;
+	}
+	for (int j = Stolb - 1, i = Stroka - 1; j > -1; j--) {
+		mass[k] = A[i][j];
+		k++;
+	}
+	for (int i = Stroka - 2, j = 0; i > 0; i--) {
+		mass[k] = A[i][j];
+		k++;
+	}
+	sort(mass, k, sdvig);
+	k--;
+	for (int i = 1, j = 0; i < Stroka - 1; i++) {
+		A[i][j] = mass[k];
+		k--;
+	}
+	for (int j = 0, i = Stroka - 1; j < Stolb; j++) {
+		A[i][j] = mass[k];
+		k--;
+	}
+	for (int i = Stroka - 2, j = Stolb - 1; i > 0; i--) {
+		A[i][j] = mass[k];
+		k--;
+	}
+	for (int j = Stolb - 1, i = 0; j > -1; j--) {
+		A[i][j] = mass[k];
+		k--;
+	}
+}
+
+int main()
+{
+	int ** A = 0;
+	int Stroka = 0, Stolb = 0, sdvig = 0;
+	if (read(Stroka, Stolb)) {
+		if (create(A, Stroka, Stolb)) {
+			if (shift(sdvig)) {
+				if (sdvig <= 2 * (Stroka + Stolb - 2)) {
+					obmen(A, Stroka, Stolb, sdvig);
+					write(A, Stroka, Stolb);
+				}
+				else {
+				    cout << "An error has occured while reading input data.";
+				}
+			}
+			else {
+				cout << "An error has occured while reading input data.";
+			}
+		}
+		else {
+			cout << "An error has occured while reading input data.";
+		}
+	}
+	else {
+		cout << "An error has occured while reading input data.";
+	}
+	return 0;
+}
