@@ -57,7 +57,7 @@ void write(double * A, unsigned int razmer) {
 int main()
 {
     unsigned int razmer = 0;
-    double * A = nullptr;
+    double * A = 0;
     if (read(razmer)) {
         if (create(A, razmer)) {
             sort(A, razmer);
